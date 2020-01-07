@@ -1,6 +1,20 @@
 public enum Country: HolidayEntity {
-    case germany(state: GermanState? = nil)
-    case unitedStates(state: USState? = nil)
+    case germany
+    case unitedStates
+
+    func allHolidays(year: Int) -> [Holiday] {
+        return Self.mapping[self]!.model.allHolidays(year: year)
+    }
+
+    private static let mapping: [Country: CountryWithState] = [
+        .germany: .germany(state: nil),
+        .unitedStates: .unitedStates(state: nil)
+    ]
+}
+
+public enum CountryWithState: HolidayEntity {
+    case germany(state: GermanState?)
+    case unitedStates(state: USState?)
 
     var model: HolidayEntity {
         switch self {

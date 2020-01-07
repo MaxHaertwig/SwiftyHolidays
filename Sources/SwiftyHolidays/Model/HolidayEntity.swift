@@ -6,7 +6,7 @@ protocol HolidayEntity {
 
 extension HolidayEntity {
     func allHolidays(years: ClosedRange<Int>) -> [Holiday] {
-        return years.reduce(into: [Holiday]()) { $0.append(contentsOf: allHolidays(year: $1)) }
+        return years.reduce(into: []) { $0.append(contentsOf: allHolidays(year: $1)) }
     }
 
     func getHoliday(_ date: Date) -> Holiday? {

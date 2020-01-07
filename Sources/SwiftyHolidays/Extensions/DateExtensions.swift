@@ -6,7 +6,15 @@ public extension Date {
     }
 
     func getHoliday(in country: Country) -> Holiday? {
-        return country.model.getHoliday(self)
+        return country.getHoliday(self)
+    }
+
+    func isHoliday(in country: CountryWithState) -> Bool {
+        return getHoliday(in: country) != nil
+    }
+
+    func getHoliday(in country: CountryWithState) -> Holiday? {
+        return country.getHoliday(self)
     }
 }
 
