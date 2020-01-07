@@ -9,7 +9,7 @@ struct Germany: CountryModel {
         self.state = state
     }
 
-    var allHolidays: [Holiday] {
+    func allHolidays(year: Int) -> [Holiday] {
         return []
     }
 }
