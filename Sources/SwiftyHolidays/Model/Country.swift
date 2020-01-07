@@ -1,4 +1,4 @@
-public enum Country {
+public enum Country: HolidayEntity {
     case germany(state: GermanState? = nil)
     case unitedStates(state: USState? = nil)
 
@@ -9,5 +9,9 @@ public enum Country {
         case .unitedStates(let state):
             return UnitedStates(state: state)
         }
+    }
+
+    func allHolidays(year: Int) -> [Holiday] {
+        return model.allHolidays(year: year)
     }
 }
