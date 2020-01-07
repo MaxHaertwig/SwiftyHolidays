@@ -32,6 +32,7 @@ extension Date {
         return addingTimeInterval(TimeInterval(days) * 24 * 60 * 60)
     }
 
+    // swiftlint:disable identifier_name
     static func easter(year: Int) -> Date {
         let a = year % 19
         let b = Int(floor(Double(year) / 100))
@@ -51,4 +52,5 @@ extension Date {
         components.day = ((h + L - 7*m + 114) % 31) + 1
         return Calendar.gregorianGMT.date(from: components)!
     }
+    // swiftlint:enable identifier_name
 }
