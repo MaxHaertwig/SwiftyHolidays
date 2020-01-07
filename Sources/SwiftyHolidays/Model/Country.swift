@@ -1,4 +1,4 @@
-public enum Country: HolidayEntity {
+public enum Country: HolidayEntity, CaseIterable {
     case germany
     case unitedStates
 
@@ -12,7 +12,7 @@ public enum Country: HolidayEntity {
     ]
 }
 
-public enum CountryWithState: HolidayEntity {
+public enum CountryWithState: HolidayEntity, CaseIterable {
     case germany(state: GermanState?)
     case unitedStates(state: USState?)
 
@@ -27,5 +27,12 @@ public enum CountryWithState: HolidayEntity {
 
     func allHolidays(year: Int) -> [Holiday] {
         return model.allHolidays(year: year)
+    }
+
+    public static var allCases: [CountryWithState] {
+        return [
+            GermanState.allCases.map { .germany(state: $0) },
+            USState.allCases.map { .unitedStates(state: $0) }
+        ].flatMap { $0 }
     }
 }
