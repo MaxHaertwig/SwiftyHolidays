@@ -15,8 +15,28 @@ final class DateExtensionsTests: XCTestCase {
         XCTAssertEqual(Date(year: 2020, month: .march, day: 16).year, 2020)
     }
 
+    func testWeekday() {
+        XCTAssertEqual(Date(year: 2020, month: .march, day: 16).weekday, 2) // Monday
+        XCTAssertEqual(Date(year: 2020, month: .march, day: 21).weekday, 7) // Saturday
+    }
+
     func testTriple() {
         XCTAssertEqual(Date(year: 2020, month: .march, day: 16).triple, DateTriple(year: 2020, month: 3, day: 16))
+    }
+
+    func testTruncated() {
+        var dateComponents = DateComponents()
+        dateComponents.year = 2020
+        dateComponents.month = 3
+        dateComponents.day = 16
+        dateComponents.hour = 6
+        dateComponents.minute = 56
+        dateComponents.second = 37
+        let date = Calendar.gregorianGMT.date(from: dateComponents)!
+        let truncatedComponents = Calendar.gregorianGMT.dateComponents([.hour, .minute, .second], from: date.truncated)
+        XCTAssertEqual(truncatedComponents.hour, 0)
+        XCTAssertEqual(truncatedComponents.minute, 0)
+        XCTAssertEqual(truncatedComponents.second, 0)
     }
 
     func testAddingDays() {
@@ -39,10 +59,20 @@ final class DateExtensionsTests: XCTestCase {
         XCTAssertEqual(Date.easter(year: 2009), Date(year: 2009, month: .april, day: 12))
     }
 
+    func testDateOfWeekdayBeforeDate() {
+        let date = Date(year: 2020, month: .march, day: 16)
+        XCTAssertEqual(Date.date(of: .saturday, before: date), Date(year: 2020, month: .march, day: 14))
+        XCTAssertEqual(Date.date(of: .monday, before: date), Date(year: 2020, month: .march, day: 9))
+    }
+
     static var allTests = [
         ("testInitYearMonthDay", testInitYearMonthDay),
         ("testYear", testYear),
+        ("testWeekday", testWeekday),
+        ("testTruncated", testTruncated),
         ("testTriple", testTriple),
-        ("testEaster", testEaster)
+        ("testAddingDays", testAddingDays),
+        ("testEaster", testEaster),
+        ("testDateOfWeekdayBeforeDate", testDateOfWeekdayBeforeDate)
     ]
 }

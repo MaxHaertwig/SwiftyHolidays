@@ -31,9 +31,18 @@ extension Date {
         return Calendar.gregorianGMT.component(.year, from: self)
     }
 
+    var weekday: Int {
+        return Calendar.gregorianGMT.component(.weekday, from: self)
+    }
+
     var triple: DateTriple {
         let dateComponents = Calendar.gregorianGMT.dateComponents([.year, .month, .day], from: self)
         return DateTriple(year: dateComponents.year!, month: dateComponents.month!, day: dateComponents.day!)
+    }
+
+    var truncated: Date {
+        let dateComponents = Calendar.gregorianGMT.dateComponents([.year, .month, .day], from: self)
+        return Calendar.gregorianGMT.date(from: dateComponents)!
     }
 
     func addingDays(_ days: Int) -> Date {
@@ -61,4 +70,12 @@ extension Date {
         return Calendar.gregorianGMT.date(from: components)!
     }
     // swiftlint:enable identifier_name
+
+    static func date(of weekday: Weekday, before date: Date) -> Date {
+        var day = date.truncated.addingDays(-1)
+        while day.weekday != weekday.rawValue {
+            day = day.addingDays(-1)
+        }
+        return day
+    }
 }
