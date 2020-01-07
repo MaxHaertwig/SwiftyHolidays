@@ -2,14 +2,12 @@ import XCTest
 @testable import SwiftyHolidays
 
 final class SwiftyHolidaysTests: XCTestCase {
-    func testExample() {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct
-        // results.
-        XCTAssertEqual(SwiftyHolidays().text, "Hello, World!")
+    func testNumberOfStates() {
+        XCTAssertEqual(GermanState.allCases.count, 16)
+        XCTAssertEqual(USState.allCases.count, 50)
     }
 
     static var allTests = [
-        ("testExample", testExample),
+        ("testNumberOfStates", testNumberOfStates)
     ]
 }
