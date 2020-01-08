@@ -1,16 +1,12 @@
 import Foundation
 
 // https://de.wikipedia.org/wiki/Gesetzliche_Feiertage_in_Deutschland
-struct Germany: CountryModel {
-    typealias State = GermanState
+final class Germany: CountryBase<GermanState> {
 
-    var state: GermanState?
+    override var iso2Code: String { "DE" }
+    override var iso3Code: String { "DEU" }
 
-    init(state: GermanState? = nil) {
-        self.state = state
-    }
-
-    func allHolidays(year: Int) -> [Holiday] {
+    override func allHolidays(year: Int) -> [Holiday] {
         guard year >= 1989 else { return [] }
 
         var holidays = [Holiday]()

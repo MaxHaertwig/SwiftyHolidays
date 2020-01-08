@@ -1,15 +1,10 @@
 import Foundation
 
-struct UnitedStates: CountryModel {
-    typealias State = USState
+final class UnitedStates: CountryBase<USState> {
+    override var iso2Code: String { "US" }
+    override var iso3Code: String { "USA" }
 
-    var state: USState?
-
-    init(state: USState? = nil) {
-        self.state = state
-    }
-
-    func allHolidays(year: Int) -> [Holiday] {
+    override func allHolidays(year: Int) -> [Holiday] {
         return []
     }
 }

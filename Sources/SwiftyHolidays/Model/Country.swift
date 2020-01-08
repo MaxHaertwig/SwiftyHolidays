@@ -2,8 +2,24 @@ public enum Country: HolidayEntity, CaseIterable {
     case germany
     case unitedStates
 
+    init?(isoCode: String) {
+        guard 2...3 ~= isoCode.count else { return nil }
+        for country in Self.allCases {
+            let model = country.model
+            if model.iso2Code == isoCode.uppercased() || model.iso3Code == isoCode.uppercased() {
+                self = country
+                return
+            }
+        }
+        return nil
+    }
+
+    var model: CountryModel {
+        return Self.mapping[self]!.model
+    }
+
     func allHolidays(year: Int) -> [Holiday] {
-        return Self.mapping[self]!.model.allHolidays(year: year)
+        return model.allHolidays(year: year)
     }
 
     private static let mapping: [Country: CountryWithState] = [
@@ -16,7 +32,7 @@ public enum CountryWithState: HolidayEntity, CaseIterable {
     case germany(state: GermanState?)
     case unitedStates(state: USState?)
 
-    var model: HolidayEntity {
+    var model: CountryModel {
         switch self {
         case .germany(let state):
             return Germany(state: state)

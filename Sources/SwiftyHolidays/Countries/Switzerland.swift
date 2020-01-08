@@ -2,16 +2,11 @@ import Foundation
 
 // https://de.wikipedia.org/wiki/Feiertage_in_der_Schweiz
 // A, B, C, and D
-struct Switzerland: CountryModel {
-    typealias State = SwissCanton
+final class Switzerland: CountryBase<SwissCanton> {
+    override var iso2Code: String { "CH" }
+    override var iso3Code: String { "CHE" }
 
-    var state: SwissCanton?
-
-    init(state: SwissCanton? = nil) {
-        self.state = state
-    }
-
-    func allHolidays(year: Int) -> [Holiday] {
+    override func allHolidays(year: Int) -> [Holiday] {
         guard year >= 1291 else { return [] }
 
         var holidays = [Holiday]()
