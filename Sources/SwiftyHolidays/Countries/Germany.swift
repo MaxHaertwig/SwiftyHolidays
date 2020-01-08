@@ -24,7 +24,7 @@ struct Germany: CountryModel {
 
         addHoliday("Neujahrstag", month: .january, day: 1)
 
-        if let state = state, [GermanState.badenWurttemberg, .bavaria, .saxonyAnhalt].contains(state) {
+        if state?.isIn([.badenWurttemberg, .bavaria, .saxonyAnhalt]) == true {
             addHoliday("Heilige Drei Könige", month: .january, day: 6)
         }
 
@@ -57,8 +57,8 @@ struct Germany: CountryModel {
 
         addHoliday("Pfingstmontag", date: easter.addingDays(50))
 
-        if let state = state, [GermanState.badenWurttemberg, .bavaria, .hesse, .northRhineWestphalia,
-            .rhinelandPalatinate, .saarland].contains(state) {
+        if state?.isIn([.badenWurttemberg, .bavaria, .hesse, .northRhineWestphalia, .rhinelandPalatinate, .saarland])
+            == true {
             addHoliday("Fronleichnam", date: easter.addingDays(60))
         }
 
@@ -74,14 +74,12 @@ struct Germany: CountryModel {
 
         if year == 2017 {
             addHoliday("Reformationstag", month: .october, day: 31)
-        } else if let state = state, [GermanState.brandenburg, .mecklenburgVorpommern, .saxony, .saxonyAnhalt,
-            .thuringia].contains(state) || (year >= 2018 && [GermanState.bremen, .hamburg, .lowerSaxony,
-            .schleswigHolstein].contains(state)) {
+        } else if let state = state, state.isIn([.brandenburg, .mecklenburgVorpommern, .saxony, .saxonyAnhalt,
+            .thuringia]) || (year >= 2018 && state.isIn([.bremen, .hamburg, .lowerSaxony, .schleswigHolstein])) {
             addHoliday("Reformationstag", month: .october, day: 31)
         }
 
-        if let state = state, [GermanState.badenWurttemberg, .bavaria, .northRhineWestphalia, .rhinelandPalatinate,
-            .saarland].contains(state) {
+        if state?.isIn([.badenWurttemberg, .bavaria, .northRhineWestphalia, .rhinelandPalatinate, .saarland]) == true {
             addHoliday("Allerheiligen", month: .november, day: 1)
         }
 
@@ -114,4 +112,8 @@ public enum GermanState: CaseIterable {
     case saxonyAnhalt
     case schleswigHolstein
     case thuringia
+
+    func isIn(_ states: Set<GermanState>) -> Bool {
+        return states.contains(self)
+    }
 }
