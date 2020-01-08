@@ -1,5 +1,6 @@
 public enum Country: HolidayEntity, CaseIterable {
     case germany
+    case switzerland
     case unitedStates
 
     init?(isoCode: String) {
@@ -24,18 +25,22 @@ public enum Country: HolidayEntity, CaseIterable {
 
     private static let mapping: [Country: CountryWithState] = [
         .germany: .germany(state: nil),
+        .switzerland: .switzerland(canton: nil),
         .unitedStates: .unitedStates(state: nil)
     ]
 }
 
 public enum CountryWithState: HolidayEntity, CaseIterable {
     case germany(state: GermanState?)
+    case switzerland(canton: SwissCanton?)
     case unitedStates(state: USState?)
 
     var model: CountryModel {
         switch self {
         case .germany(let state):
             return Germany(state: state)
+        case .switzerland(let canton):
+            return Switzerland(state: canton)
         case .unitedStates(let state):
             return UnitedStates(state: state)
         }
@@ -48,6 +53,7 @@ public enum CountryWithState: HolidayEntity, CaseIterable {
     public static var allCases: [CountryWithState] {
         return [
             GermanState.allCases.map { .germany(state: $0) },
+            SwissCanton.allCases.map { .switzerland(canton: $0) },
             USState.allCases.map { .unitedStates(state: $0) }
         ].flatMap { $0 }
     }
