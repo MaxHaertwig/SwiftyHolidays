@@ -65,6 +65,28 @@ final class DateExtensionsTests: XCTestCase {
         XCTAssertEqual(Date.date(of: .monday, before: date), Date(year: 2020, month: .march, day: 9))
     }
 
+    func testDateOfWeekdayAfterDate() {
+        let date = Date(year: 2020, month: .march, day: 16)
+        XCTAssertEqual(Date.date(of: .saturday, after: date), Date(year: 2020, month: .march, day: 21))
+        XCTAssertEqual(Date.date(of: .monday, after: date), Date(year: 2020, month: .march, day: 23))
+    }
+
+    func testFirstWeekdayOfMonthInYear() {
+        XCTAssertEqual(Date.first(.wednesday, of: .january, in: 2020), Date(year: 2020, month: .january, day: 1))
+        XCTAssertEqual(Date.first(.tuesday, of: .january, in: 2020), Date(year: 2020, month: .january, day: 7))
+    }
+
+    func testLastWeekdayOfMonthInYear() {
+        XCTAssertEqual(Date.last(.saturday, of: .january, in: 2020), Date(year: 2020, month: .january, day: 25))
+        XCTAssertEqual(Date.last(.friday, of: .january, in: 2020), Date(year: 2020, month: .january, day: 31))
+    }
+
+    func testCalculateOrdinalWeekdayOfMonthInYear() {
+        XCTAssertEqual(Date.calculate(.first, .tuesday, of: .january, in: 2020), Date.first(.tuesday, of: .january, in: 2020))
+        XCTAssertEqual(Date.calculate(.second, .thursday, of: .february, in: 2020), Date(year: 2020, month: .february, day: 13))
+        XCTAssertEqual(Date.calculate(.fourth, .sunday, of: .july, in: 2020), Date(year: 2020, month: .july, day: 26))
+    }
+
     static var allTests = [
         ("testInitYearMonthDay", testInitYearMonthDay),
         ("testYear", testYear),
@@ -73,6 +95,10 @@ final class DateExtensionsTests: XCTestCase {
         ("testTriple", testTriple),
         ("testAddingDays", testAddingDays),
         ("testEaster", testEaster),
-        ("testDateOfWeekdayBeforeDate", testDateOfWeekdayBeforeDate)
+        ("testDateOfWeekdayBeforeDate", testDateOfWeekdayBeforeDate),
+        ("testDateOfWeekdayAfterDate", testDateOfWeekdayAfterDate),
+        ("testFirstWeekdayOfMonthInYear", testFirstWeekdayOfMonthInYear),
+        ("testLastWeekdayOfMonthInYear", testLastWeekdayOfMonthInYear),
+        ("testCalculateOrdinalWeekdayOfMonthInYear", testCalculateOrdinalWeekdayOfMonthInYear)
     ]
 }

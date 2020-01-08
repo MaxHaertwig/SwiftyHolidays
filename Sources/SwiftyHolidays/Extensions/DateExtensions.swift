@@ -78,4 +78,37 @@ extension Date {
         }
         return day
     }
+
+    static func date(of weekday: Weekday, after date: Date) -> Date {
+        var day = date.truncated.addingDays(1)
+        while day.weekday != weekday.rawValue {
+            day = day.addingDays(1)
+        }
+        return day
+    }
+
+    enum WeekdayInMonthOrdinal: Int {
+        case first, second, third, fourth
+    }
+
+    static func first(_ weekday: Weekday, of month: Month, in year: Int) -> Date {
+        var date = month.firstDay(in: year)
+        while date.weekday != weekday.rawValue {
+            date = date.addingDays(1)
+        }
+        return date
+    }
+
+    static func last(_ weekday: Weekday, of month: Month, in year: Int) -> Date {
+        var date = month.lastDay(in: year)
+        while date.weekday != weekday.rawValue {
+            date = date.addingDays(-1)
+        }
+        return date
+    }
+
+    static func calculate(_ ordinal: WeekdayInMonthOrdinal, _ weekday: Weekday, of month: Month, in year: Int) -> Date {
+        return first(weekday, of: month, in: year).addingDays(ordinal.rawValue * 7)
+    }
+
 }
