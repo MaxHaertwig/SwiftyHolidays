@@ -7,47 +7,22 @@ final class Austria: CountryBase<AustrianState> {
 
     override func allHolidays(year: Int) -> [Holiday] {
         guard year >= 1945 else { return [] }
-
-        var holidays = [Holiday]()
-
-        func addHoliday(_ name: String, month: Month, day: Int) {
-            holidays.append(Holiday(name: name, date: Date(year: year, month: month, day: day)))
-        }
-        func addHoliday(_ name: String, date: Date) {
-            holidays.append(Holiday(name: name, date: date))
-        }
-
-        addHoliday("Neujahr", month: .january, day: 1)
-
-        addHoliday("Heilige Drei Könige", month: .january, day: 6)
-
         let easter = Date.easter(year: year)
-
-        addHoliday("Ostermontag", date: easter.addingDays(1))
-
-        addHoliday("Staatsfeiertag", month: .may, day: 1)
-
-        addHoliday("Christi Himmelfahrt", date: easter.addingDays(39))
-
-        addHoliday("Pfingstmontag", date: easter.addingDays(50))
-
-        addHoliday("Fronleichnam", date: easter.addingDays(60))
-
-        addHoliday("Mariä Himmelfahrt", month: .august, day: 15)
-
-        if year >= 1967 {
-            addHoliday("Nationalfeiertag", month: .october, day: 26)
-        }
-
-        addHoliday("Allerheiligen", month: .november, day: 1)
-
-        addHoliday("Mariä Empfängnis", month: .december, day: 8)
-
-        addHoliday("Christtag", month: .december, day: 25)
-
-        addHoliday("Stefanitag", month: .december, day: 26)
-
-        return holidays
+        return [
+            Holiday(name: "Neujahr", date: Date(year: year, month: .january, day: 1)),
+            Holiday(name: "Heilige Drei Könige", date: Date(year: year, month: .january, day: 6)),
+            Holiday(name: "Ostermontag", date: easter.addingDays(1)),
+            Holiday(name: "Staatsfeiertag", date: Date(year: year, month: .may, day: 1)),
+            Holiday(name: "Christi Himmelfahrt", date: easter.addingDays(39)),
+            Holiday(name: "Pfingstmontag", date: easter.addingDays(50)),
+            Holiday(name: "Fronleichnam", date: easter.addingDays(60)),
+            Holiday(name: "Mariä Himmelfahrt", date: Date(year: year, month: .august, day: 15)),
+            year >= 1967 ? Holiday(name: "Nationalfeiertag", date: Date(year: year, month: .october, day: 26)) : nil,
+            Holiday(name: "Allerheiligen", date: Date(year: year, month: .november, day: 1)),
+            Holiday(name: "Mariä Empfängnis", date: Date(year: year, month: .december, day: 8)),
+            Holiday(name: "Christtag", date: Date(year: year, month: .december, day: 25)),
+            Holiday(name: "Stefanitag", date: Date(year: year, month: .december, day: 26))
+        ].compactMap { $0 }
     }
 }
 
