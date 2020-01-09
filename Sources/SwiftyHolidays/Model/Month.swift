@@ -32,5 +32,4 @@ enum Month: Int, CaseIterable {
     func lastDay(in year: Int) -> Date {
         return Date(year: year, month: self, day: length(in: year))
     }
-
 }

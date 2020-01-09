@@ -110,5 +110,4 @@ extension Date {
     static func calculate(_ ordinal: WeekdayInMonthOrdinal, _ weekday: Weekday, of month: Month, in year: Int) -> Date {
         return first(weekday, of: month, in: year).addingDays(ordinal.rawValue * 7)
     }
-
 }

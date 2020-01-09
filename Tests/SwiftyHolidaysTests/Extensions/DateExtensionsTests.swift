@@ -82,8 +82,10 @@ final class DateExtensionsTests: XCTestCase {
     }
 
     func testCalculateOrdinalWeekdayOfMonthInYear() {
-        XCTAssertEqual(Date.calculate(.first, .tuesday, of: .january, in: 2020), Date.first(.tuesday, of: .january, in: 2020))
-        XCTAssertEqual(Date.calculate(.second, .thursday, of: .february, in: 2020), Date(year: 2020, month: .february, day: 13))
+        XCTAssertEqual(Date.calculate(.first, .tuesday, of: .january, in: 2020), Date.first(.tuesday, of: .january,
+            in: 2020))
+        XCTAssertEqual(Date.calculate(.second, .thursday, of: .february, in: 2020), Date(year: 2020, month: .february,
+            day: 13))
         XCTAssertEqual(Date.calculate(.fourth, .sunday, of: .july, in: 2020), Date(year: 2020, month: .july, day: 26))
     }
 
