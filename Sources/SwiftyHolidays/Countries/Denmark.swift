@@ -1,5 +1,6 @@
 import Foundation
 
+// https://en.wikipedia.org/wiki/Public_holidays_in_Denmark
 struct Denmark: CountryModel {
     var iso2Code: String { "DK" }
     var iso3Code: String { "DNK" }

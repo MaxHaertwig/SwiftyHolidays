@@ -2,6 +2,7 @@ public enum Country: HolidayEntity, CaseIterable {
     case austria
     case denmark
     case germany
+    case luxembourg
     case switzerland
     case unitedStates
 
@@ -21,6 +22,8 @@ public enum Country: HolidayEntity, CaseIterable {
         switch self {
         case .denmark:
             return Denmark()
+        case .luxembourg:
+            return Luxembourg()
         default:
             return Self.mapping[self]!.model
         }
