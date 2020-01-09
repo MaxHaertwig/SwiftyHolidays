@@ -1,5 +1,6 @@
 public enum Country: HolidayEntity, CaseIterable {
     case austria
+    case denmark
     case germany
     case switzerland
     case unitedStates
@@ -17,7 +18,12 @@ public enum Country: HolidayEntity, CaseIterable {
     }
 
     var model: CountryModel {
-        return Self.mapping[self]!.model
+        switch self {
+        case .denmark:
+            return Denmark()
+        default:
+            return Self.mapping[self]!.model
+        }
     }
 
     func allHolidays(year: Int) -> [Holiday] {
