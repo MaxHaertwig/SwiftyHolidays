@@ -1,6 +1,7 @@
 public enum Country: HolidayEntity, CaseIterable {
     case austria
     case denmark
+    case france
     case germany
     case luxembourg
     case spain
@@ -36,6 +37,7 @@ public enum Country: HolidayEntity, CaseIterable {
 
     private static let mapping: [Country: CountryWithState] = [
         .austria: .austria(state: nil),
+        .france: .france(department: nil),
         .germany: .germany(state: nil),
         .spain: .spain(community: nil),
         .switzerland: .switzerland(canton: nil),
@@ -45,6 +47,7 @@ public enum Country: HolidayEntity, CaseIterable {
 
 public enum CountryWithState: HolidayEntity, CaseIterable {
     case austria(state: AustrianState?)
+    case france(department: FrenchDepartment?)
     case germany(state: GermanState?)
     case spain(community: SpanishCommunity?)
     case switzerland(canton: SwissCanton?)
@@ -54,6 +57,8 @@ public enum CountryWithState: HolidayEntity, CaseIterable {
         switch self {
         case .austria(let state):
             return Austria(state: state)
+        case .france(let department):
+            return France(state: department)
         case .germany(let state):
             return Germany(state: state)
         case .spain(let community):
@@ -72,6 +77,7 @@ public enum CountryWithState: HolidayEntity, CaseIterable {
     public static var allCases: [CountryWithState] {
         return [
             AustrianState.allCases.map { .austria(state: $0) },
+            FrenchDepartment.allCases.map { .france(department: $0) },
             GermanState.allCases.map { .germany(state: $0) },
             SpanishCommunity.allCases.map { .spain(community: $0) },
             SwissCanton.allCases.map { .switzerland(canton: $0) },
