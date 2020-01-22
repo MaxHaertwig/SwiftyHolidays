@@ -1,120 +1,111 @@
 import Foundation
 
-// https://de.wikipedia.org/wiki/Feiertage_in_der_Schweiz
-// A, B, C, and D
-final class Switzerland: CountryBase<SwissCanton> {
-    override var iso2Code: String { "CH" }
-    override var iso3Code: String { "CHE" }
+// https://de.wikipedia.org/wiki/Feiertage_in_der_Schweiz A, B, C, and D
+final class Switzerland: CountryWithStateBase<SwissCanton> {
+    override class var iso2Code: String { "CH" }
+    override class var iso3Code: String { "CHE" }
 
-    override func allHolidays(year: Int) -> [Holiday] {
+    override var defaultTimeZone: TimeZone { TimeZone(abbreviation: "CET")! }
+
+    override func allHolidays(in year: Int) -> [Holiday] {
         guard year >= 1291 else { return [] }
+        return buildHolidays(year: year) { builder in
+            builder.addHoliday("Neujahrstag", date: (.january, 1))
 
-        var holidays = [Holiday]()
+            if state?.isIn([.zurich, .bern, .luzern, .obwalden, .glarus, .zug, .fribourg, .solothurn, .schaffhausen,
+                .thurgau, .vaud, .neuchatel, .geneva, .jura]) == true {
+                builder.addHoliday("Berchtoldstag", date: (.january, 2))
+            }
 
-        func addHoliday(_ name: String, month: Month, day: Int) {
-            holidays.append(Holiday(name: name, date: Date(year: year, month: month, day: day)))
+            if state?.isIn([.uri, .schwyz, .ticino]) == true {
+                builder.addHoliday("Heilige Drei Könige", date: (.january, 6))
+            }
+
+            if state == .neuchatel {
+                builder.addHoliday("Jahrestag der Ausrufung der Republik", date: (.march, 1))
+            }
+
+            if state?.isIn([.uri, .schwyz, .nidwalden, .ticino, .valais]) == true {
+                builder.addHoliday("Josefstag", date: (.march, 19))
+            }
+
+            let easter = LocalDate.easter(in: year)
+
+            if state == .glarus && year >= 1835 {
+                let date = Month.april.first(.thursday, in: year)
+                builder.addHoliday("Näfelser Fahrt", date: date != easter.addingDays(-2) ? date : date.addingDays(7))
+            }
+
+            if state != .ticino && state != .valais {
+                builder.addHoliday("Karfreitag", date: easter.addingDays(-2))
+            }
+
+            builder.addHoliday("Ostern", date: easter)
+
+            if let state = state, !state.isIn([.solothurn, .aargau, .valais]) {
+                builder.addHoliday("Ostermontag", date: easter.addingDays(1))
+            }
+
+            if state?.isIn([.zurich, .solothurn, .baselStadt, .baselLandschaft, .schaffhausen, .thurgau, .ticino,
+                .neuchatel, .jura]) == true {
+                builder.addHoliday("Tag der Arbeit", date: (.may, 1))
+            }
+
+            builder.addHoliday("Auffahrt", date: easter.addingDays(39))
+
+            if let state = state, !state.isIn([.solothurn, .aargau, .valais]) {
+                builder.addHoliday("Pfingstmontag", date: easter.addingDays(50))
+            }
+
+            if state?.isIn([.luzern, .uri, .schwyz, .obwalden, .nidwalden, .zug, .appenzellInnerrhoden, .ticino,
+                .valais, .jura]) == true {
+                builder.addHoliday("Fronleichnam", date: easter.addingDays(60))
+            }
+
+            if state == .ticino && year >= 1974 {
+                builder.addHoliday("Fest der Unabhängigkeit", date: (.june, 23))
+            }
+
+            if state == .ticino {
+                builder.addHoliday("Peter und Paul", date: (.june, 29))
+            }
+
+            builder.addHoliday("Bundesfeier", date: (.august, 1))
+
+            if state?.isIn([.luzern, .uri, .schwyz, .obwalden, .nidwalden, .zug, .appenzellInnerrhoden, .ticino,
+                .valais, .jura]) == true {
+                builder.addHoliday("Mariä Himmelfahrt", date: (.august, 15))
+            }
+
+            if state == .vaud {
+                builder.addHoliday("Lundi du Jeûne", date: Month.september.get(.third, .sunday, in: year).addingDays(1))
+            }
+
+            if state == .obwalden {
+                builder.addHoliday("Bruder Klaus", date: (.september, 25))
+            }
+
+            if state?.isIn([.luzern, .uri, .schwyz, .obwalden, .nidwalden, .glarus, .zug, .appenzellInnerrhoden,
+                .stGallen, .ticino, .valais, .jura]) == true {
+                builder.addHoliday("Allerheiligen", date: (.november, 1))
+            }
+
+            if state?.isIn([.luzern, .uri, .schwyz, .obwalden, .nidwalden, .zug, .appenzellInnerrhoden, .ticino,
+                .valais]) == true {
+                builder.addHoliday("Mariä Empfängnis", date: (.december, 8))
+            }
+
+            if state == .geneva {
+                builder.addHoliday("Escalade de Genève", date: (.december, 12))
+            }
+
+            builder.addHoliday("Weihnachtstag", date: (.december, 25))
+            builder.addHoliday("Stephanstag", date: (.december, 26))
+
+            if state == .geneva {
+                builder.addHoliday("Wiederherstellung der Republik", date: (.december, 31))
+            }
         }
-        func addHoliday(_ name: String, date: Date) {
-            holidays.append(Holiday(name: name, date: date))
-        }
-
-        addHoliday("Neujahrstag", month: .january, day: 1)
-
-        if state?.isIn([.zurich, .bern, .luzern, .obwalden, .glarus, .zug, .fribourg, .solothurn, .schaffhausen,
-            .thurgau, .vaud, .neuchatel, .geneva, .jura]) == true {
-            addHoliday("Berchtoldstag", month: .january, day: 2)
-        }
-
-        if state?.isIn([.uri, .schwyz, .ticino]) == true {
-            addHoliday("Heilige Drei Könige", month: .january, day: 6)
-        }
-
-        if state == .neuchatel {
-            addHoliday("Jahrestag der Ausrufung der Republik", month: .march, day: 1)
-        }
-
-        if state?.isIn([.uri, .schwyz, .nidwalden, .ticino, .valais]) == true {
-            addHoliday("Josefstag", month: .march, day: 19)
-        }
-
-        let easter = Date.easter(year: year)
-
-        if state == .glarus && year >= 1835 {
-            let date = Date.first(.thursday, of: .april, in: year)
-            addHoliday("Näfelser Fahrt", date: date != easter.addingDays(-2) ? date : date.addingDays(7))
-        }
-
-        if state != .ticino && state != .valais {
-            addHoliday("Karfreitag", date: easter.addingDays(-2))
-        }
-
-        addHoliday("Ostern", date: easter)
-
-        if let state = state, !state.isIn([.solothurn, .aargau, .valais]) {
-            addHoliday("Ostermontag", date: easter.addingDays(1))
-        }
-
-        if state?.isIn([.zurich, .solothurn, .baselStadt, .baselLandschaft, .schaffhausen, .thurgau, .ticino,
-            .neuchatel, .jura]) == true {
-            addHoliday("Tag der Arbeit", month: .may, day: 1)
-        }
-
-        addHoliday("Auffahrt", date: easter.addingDays(39))
-
-        if let state = state, !state.isIn([.solothurn, .aargau, .valais]) {
-            addHoliday("Pfingstmontag", date: easter.addingDays(50))
-        }
-
-        if state?.isIn([.luzern, .uri, .schwyz, .obwalden, .nidwalden, .zug, .appenzellInnerrhoden, .ticino, .valais,
-            .jura]) == true {
-            addHoliday("Fronleichnam", date: easter.addingDays(60))
-        }
-
-        if state == .ticino && year >= 1974 {
-            addHoliday("Fest der Unabhängigkeit", month: .june, day: 23)
-        }
-
-        if state == .ticino {
-            addHoliday("Peter und Paul", month: .june, day: 29)
-        }
-
-        addHoliday("Bundesfeier", month: .august, day: 1)
-
-        if state?.isIn([.luzern, .uri, .schwyz, .obwalden, .nidwalden, .zug, .appenzellInnerrhoden, .ticino, .valais,
-            .jura]) == true {
-            addHoliday("Mariä Himmelfahrt", month: .august, day: 15)
-        }
-
-        if state == .vaud {
-            addHoliday("Lundi du Jeûne", date: Date.calculate(.third, .sunday, of: .september, in: year).addingDays(1))
-        }
-
-        if state == .obwalden {
-            addHoliday("Bruder Klaus", month: .september, day: 25)
-        }
-
-        if state?.isIn([.luzern, .uri, .schwyz, .obwalden, .nidwalden, .glarus, .zug, .appenzellInnerrhoden, .stGallen,
-            .ticino, .valais, .jura]) == true {
-            addHoliday("Allerheiligen", month: .november, day: 1)
-        }
-
-        if state?.isIn([.luzern, .uri, .schwyz, .obwalden, .nidwalden, .zug, .appenzellInnerrhoden, .ticino, .valais])
-            == true {
-            addHoliday("Mariä Empfängnis", month: .december, day: 8)
-        }
-
-        if state == .geneva {
-            addHoliday("Escalade de Genève", month: .december, day: 12)
-        }
-
-        addHoliday("Weihnachtstag", month: .december, day: 25)
-        addHoliday("Stephanstag", month: .december, day: 26)
-
-        if state == .geneva {
-            addHoliday("Wiederherstellung der Republik", month: .december, day: 31)
-        }
-
-        return holidays
     }
 }
 

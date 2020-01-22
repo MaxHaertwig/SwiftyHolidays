@@ -1,261 +1,253 @@
 import Foundation
 
-final class UnitedStates: CountryBase<USState> {
-    override var iso2Code: String { "US" }
-    override var iso3Code: String { "USA" }
+final class UnitedStates: CountryWithStateBase<USState> {
+    override class var iso2Code: String { "US" }
+    override class var iso3Code: String { "USA" }
 
-    override func allHolidays(year: Int) -> [Holiday] {
+    override var defaultTimeZone: TimeZone {
+        if let state = state {
+            if state == .alaska {
+                return TimeZone(abbreviation: "AKST")!
+            }
+            if state == .hawaii {
+                return TimeZone(abbreviation: "HST")!
+            }
+            if state.isIn([.california, .nevada, .oregon, .washington]) {
+                return TimeZone(abbreviation: "PST")!
+            }
+            if state.isIn([.arizona, .colorado, .idaho, .montana, .newMexico, .utah, .wyoming]) {
+                return TimeZone(abbreviation: "PST")!
+            }
+            if state.isIn([.arkansas, .alabama, .illinois, .iowa, .kansas, .louisiana, .minnesota, .missouri,
+                .mississippi, .nebraska, .northDakota, .oklahoma, .southDakota, .tennessee, .texas, .wisconsin]) {
+                return TimeZone(abbreviation: "CST")!
+            }
+        }
+        return TimeZone(abbreviation: "EST")!
+    }
+
+    override func allHolidays(in year: Int) -> [Holiday] {
         guard year >= 1776 else { return [] }
 
-        var holidays = [Holiday]()
+        let builder = HolidaysBuilderUS(year: year)
 
-        func addHoliday(_ holiday: Holiday?) {
-            if let holiday = holiday {
-                holidays.append(holiday)
-            }
-        }
-        func addHoliday(_ name: String, month: Month, day: Int, checkObservance: Bool = false) {
-            let holiday = Holiday(name: name, date: Date(year: year, month: month, day: day))
-            holidays.append(holiday)
-            if checkObservance, let observedHolday = observedHoliday(of: holiday) {
-                holidays.append(observedHolday)
-            }
-        }
-        func addHoliday(_ name: String, date: Date) {
-            holidays.append(Holiday(name: name, date: date))
-        }
+        builder.addHoliday("New Year's Day", date: (.january, 1), checkObservance: true)
 
-        addHoliday("New Year's Day", month: .january, day: 1, checkObservance: true)
+        builder.addHoliday(leeJacksonDay(in: year))
 
-        addHoliday(leeJacksonDay(in: year))
-
-        addHoliday(martinLutherKingJrDay(in: year))
+        builder.addHoliday(martinLutherKingJrDay(in: year))
 
         if state?.isIn([.connecticut, .illinois, .indiana, .newJersey, .newYork]) == true || (state == .california &&
             1971...2009 ~= year) {
-            addHoliday("Lincoln's Birthday", month: .february, day: 12, checkObservance: true)
+            builder.addHoliday("Lincoln's Birthday", date: (.february, 12), checkObservance: true)
         }
 
-        addHoliday(susanBAnothonyDay(in: year))
+        builder.addHoliday(susanBAnothonyDay(in: year))
 
-        addHoliday(washingtonsBirthday(in: year))
+        builder.addHoliday(washingtonsBirthday(in: year))
 
         if state == .illinois && year >= 1978 {
-            addHoliday("Casimir Pulaski Day", date: Date.first(.monday, of: .march, in: year))
+            builder.addHoliday("Casimir Pulaski Day", date: Month.march.first(.monday, in: year))
         }
 
         if state == .texas && year >= 1874 {
-            addHoliday("Texas Independence Day", month: .march, day: 2)
+            builder.addHoliday("Texas Independence Day", date: (.march, 2))
         }
 
         if state == .vermont && year >= 1800 {
-            addHoliday("Town Meeting Day", date: Date.first(.tuesday, of: .march, in: year))
+            builder.addHoliday("Town Meeting Day", date: Month.march.first(.tuesday, in: year))
         }
 
         if state == .massachusetts && year >= 1901 {
-            addHoliday("Evacuation Day", month: .march, day: 17, checkObservance: true)
+            builder.addHoliday("Evacuation Day", date: (.march, 17), checkObservance: true)
         }
 
         if state == .alaska {
-            let name = "Seward's Day"
             if year >= 1955 {
-                addHoliday(name, date: Date.last(.monday, of: .march, in: year))
+                builder.addHoliday("Seward's Day", date: Month.march.last(.monday, in: year))
             } else if year >= 1955 {
-                addHoliday(name, month: .march, day: 30)
+                builder.addHoliday("Seward's Day", date: (.march, 30))
             }
         }
 
         if state?.isIn([.maine, .massachusetts]) == true {
-            let name = "Patriot's Day"
             if year >= 1969 {
-                addHoliday(name, date: Date.calculate(.third, .monday, of: .april, in: year))
+                builder.addHoliday("Patriot's Day", date: Month.april.get(.third, .monday, in: year))
             } else if year >= 1894 {
-                addHoliday(name, month: .april, day: 19)
+                builder.addHoliday("Patriot's Day", date: (.april, 19))
             }
         }
 
-        let easter = Date.easter(year: year)
+        let easter = LocalDate.easter(in: year)
 
         if state?.isIn([.connecticut, .delaware, .indiana, .kentucky, .louisiana, .newJersey, .northCarolina,
             .tennessee, .texas]) == true {
-            addHoliday("Good Friday", date: Date.date(of: .friday, before: easter))
+            builder.addHoliday("Good Friday", date: easter.addingDays(-2))
         }
 
-        addHoliday(confederateHeroesDay(in: year))
+        builder.addHoliday(confederateHeroesDay(in: year))
 
         if state == .texas && year >= 1875 {
-            addHoliday("San Jacinto Day", month: .april, day: 21)
+            builder.addHoliday("San Jacinto Day", date: (.april, 21))
         }
 
         if state == .nebraska {
-            let name = "Arbor Day"
             if year >= 1989 {
-                addHoliday(name, date: Date.last(.friday, of: .april, in: year))
+                builder.addHoliday("Arbor Day", date: Month.april.last(.friday, in: year))
             } else if year >= 1885 {
-                addHoliday(name, month: .april, day: 22)
+                builder.addHoliday("Arbor Day", date: (.april, 22))
             }
         }
 
         if state == .westVirginia && year >= 1960 && year.isMultiple(of: 2) {
-            addHoliday("Primary Election Day", date: Date.calculate(.second, .tuesday, of: .may, in: year))
+            builder.addHoliday("Primary Election Day", date: Month.may.get(.second, .tuesday, in: year))
         } else if state == .indiana && ((year >= 2006 && year.isMultiple(of: 2)) || year >= 2015) {
-            let firstMondayInMay = Date.calculate(.first, .monday, of: .may, in: year)
-            addHoliday("Primary Election Day", date: Date.date(of: .tuesday, after: firstMondayInMay))
+            builder.addHoliday("Primary Election Day", date: Month.may.first(.monday, in: year).addingDays(1))
         }
 
         if state == .missouri && year >= 1949 {
-            addHoliday("Truman Day", month: .may, day: 8, checkObservance: true)
+            builder.addHoliday("Truman Day", date: (.may, 8), checkObservance: true)
         }
 
         if year >= 1970 {
-            addHoliday("Memorial Day", date: Date.last(.monday, of: .may, in: year))
+            builder.addHoliday("Memorial Day", date: Month.may.last(.monday, in: year))
         } else if year >= 1888 {
-            addHoliday("Memorial Day", month: .may, day: 30)
+            builder.addHoliday("Memorial Day", date: (.may, 30))
         }
 
         if state == .alabama && year >= 1890 {
-            addHoliday("Jefferson Davis' Birthday", date: Date.first(.monday, of: .june, in: year))
+            builder.addHoliday("Jefferson Davis' Birthday", date: Month.june.first(.monday, in: year))
         }
 
         if state == .hawaii && year >= 1872 {
-            addHoliday("Kamehameha Day", month: .june, day: 11, checkObservance: year >= 2011)
+            builder.addHoliday("Kamehameha Day", date: (.june, 11), checkObservance: year >= 2011)
         }
 
         if state == .texas && year >= 1980 {
-            addHoliday("Emancipation Day", month: .june, day: 19)
+            builder.addHoliday("Emancipation Day", date: (.june, 19))
         }
 
         if state == .westVirginia && year >= 1927 {
-            addHoliday("West Virginia Day", month: .june, day: 20, checkObservance: true)
+            builder.addHoliday("West Virginia Day", date: (.june, 20), checkObservance: true)
         }
 
         if year >= 1871 {
-            addHoliday("Independence Day", month: .july, day: 4, checkObservance: true)
+            builder.addHoliday("Independence Day", date: (.july, 4), checkObservance: true)
         }
 
         if state == .utah && year >= 1849 {
-            addHoliday("Pioneer Day", month: .july, day: 24, checkObservance: true)
+            builder.addHoliday("Pioneer Day", date: (.july, 24), checkObservance: true)
         }
 
         if state == .rhodeIsland && year >= 1948 {
-            addHoliday("Victory Day", date: Date.calculate(.second, .monday, of: .august, in: year))
+            builder.addHoliday("Victory Day", date: Month.august.get(.second, .monday, in: year))
         }
 
         if state == .hawaii && year >= 1959 {
-            addHoliday("Statehood Day", date: Date.calculate(.third, .friday, of: .august, in: year))
+            builder.addHoliday("Statehood Day", date: Month.august.get(.third, .friday, in: year))
         }
 
         if state == .vermont && year >= 1778 {
-            addHoliday("Bennington Battle Day", month: .august, day: 16, checkObservance: true)
+            builder.addHoliday("Bennington Battle Day", date: (.august, 16), checkObservance: true)
         }
 
         if state == .texas && year >= 1973 {
-            addHoliday("Lyndon Baines Johnson Day", month: .august, day: 27)
+            builder.addHoliday("Lyndon Baines Johnson Day", date: (.august, 27))
         }
 
         if year >= 1894 {
-            addHoliday("Labor Day", date: Date.first(.monday, of: .september, in: year))
+            builder.addHoliday("Labor Day", date: Month.september.first(.monday, in: year))
         }
 
         if let state = state, !state.isIn([.alaska, .arkansas, .delaware, .florida, .hawaii, .nevada]) {
             let name = state == .southDakota ? "Native American Day" : "Columbus Day"
             if year >= 1970 {
-                addHoliday(name, date: Date.calculate(.second, .monday, of: .october, in: year))
+                builder.addHoliday(name, date: Month.october.get(.second, .monday, in: year))
             } else if year >= 1937 {
-                addHoliday(name, month: .october, day: 12)
+                builder.addHoliday(name, date: (.october, 12))
             }
         }
 
         if state == .alaska && year >= 1867 {
-            addHoliday("Alaska Day", month: .october, day: 18, checkObservance: true)
+            builder.addHoliday("Alaska Day", date: (.october, 18), checkObservance: true)
         }
 
         if state == .nevada && year >= 1933 {
             let name = "Nevada Day"
             if year >= 2000 {
-                addHoliday(name, date: Date.last(.friday, of: .october, in: year))
+                builder.addHoliday(name, date: Month.october.last(.friday, in: year))
             } else {
-                addHoliday(name, month: .october, day: 31, checkObservance: true)
+                builder.addHoliday(name, date: (.october, 31), checkObservance: true)
             }
         }
 
         if (state?.isIn([.delaware, .hawaii, .illinois, .indiana, .louisiana, .montana, .newHampshire, .newJersey,
             .newYork, .westVirginia]) == true && year >= 2008 && year.isMultiple(of: 2)) || (state?.isIn([.indiana,
             .newYork]) == true && year >= 2015) {
-            addHoliday("Election Day", date: Date.date(of: .tuesday, after: Date(year: year, month: .november, day: 1)))
+            builder.addHoliday("Election Day", date: Month.november.firstDay(in: year).next(.tuesday))
         }
 
-        addHoliday(veteransDay(in: year))
+        builder.addHoliday(veteransDay(in: year))
 
         if year >= 1871 {
-            addHoliday("Thanksgiving Day", date: Date.calculate(.fourth, .thursday, of: .november, in: year))
+            builder.addHoliday("Thanksgiving Day", date: Month.november.get(.fourth, .thursday, in: year))
         }
 
         if let state = state, (state.isIn([.kansas, .michigan, .northCarolina]) && year >= 2013) || (state == .texas &&
             year >= 1981) || (state == .wisconsin && year >= 2012) {
             let name = "Christmas Eve"
-            let date = Date(year: year, month: .december, day: 24)
-            addHoliday(name, date: date)
-            if date.weekday == Weekday.friday.rawValue || date.weekday == Weekday.saturday.rawValue {
-                addHoliday(name + " (observed)", date: date.addingDays(-1))
-            } else if date.weekday == Weekday.sunday.rawValue {
-                addHoliday(name + " (observed)", date: date.addingDays(-2))
+            let date = LocalDate(year: year, month: .december, day: 24)
+            builder.addHoliday(name, date: date)
+            if date.weekday == Weekday.friday || date.weekday == Weekday.saturday {
+                builder.addHoliday(name + " (observed)", date: date.addingDays(-1))
+            } else if date.weekday == Weekday.sunday {
+                builder.addHoliday(name + " (observed)", date: date.addingDays(-2))
             }
         }
 
         if year >= 1870 {
-            addHoliday("Christmas Day", month: .december, day: 25, checkObservance: true)
+            builder.addHoliday("Christmas Day", date: (.december, 25), checkObservance: true)
         }
 
         if state == .northCarolina && year >= 2013 {
             let name = "Day After Christmas"
-            let date = Date(year: year, month: .december, day: 26)
-            if date.weekday == Weekday.saturday.rawValue {
-                addHoliday(name, date: date.addingDays(2))
-            } else if date.weekday == Weekday.sunday.rawValue || date.weekday == Weekday.monday.rawValue {
-                addHoliday(name, date: date.addingDays(1))
+            let date = LocalDate(year: year, month: .december, day: 26)
+            if date.weekday == Weekday.saturday {
+                builder.addHoliday(name, date: date.addingDays(2))
+            } else if date.weekday == Weekday.sunday || date.weekday == Weekday.monday {
+                builder.addHoliday(name, date: date.addingDays(1))
             }
         } else if state == .texas && year >= 1981 {
-            addHoliday("Day After Christmas", month: .december, day: 26)
+            builder.addHoliday("Day After Christmas", date: (.december, 26))
         }
 
         if (state?.isIn([.kentucky, .michigan]) == true && year >= 2013) || (state == .wisconsin && year >= 2012) {
-            let date = Date(year: year, month: .december, day: 31)
-            addHoliday("New Year's Eve", date: date.weekday == Weekday.saturday.rawValue ? date.addingDays(-1) : date)
+            let date = LocalDate(year: year, month: .december, day: 31)
+            builder.addHoliday("New Year's Eve", date: date.weekday == Weekday.saturday ? date.addingDays(-1) : date)
         }
 
-        if Date(year: year, month: .december, day: 31).weekday == Weekday.friday.rawValue {
-            addHoliday("New Year's Day (observed)", month: .december, day: 31)
+        if LocalDate(year: year, month: .december, day: 31).weekday == Weekday.friday {
+            builder.addHoliday("New Year's Day (observed)", date: (.december, 31))
         }
 
-        return holidays
-    }
-
-    func observedHoliday(of holiday: Holiday) -> Holiday? {
-        if holiday.date.weekday == Weekday.saturday.rawValue {
-            return Holiday(name: holiday.name + " (observed)", date: holiday.date.addingDays(-1))
-        }
-        if holiday.date.weekday == Weekday.sunday.rawValue {
-            return Holiday(name: holiday.name + " (observed)", date: holiday.date.addingDays(1))
-        }
-        return nil
+        return builder.getHolidays()
     }
 
     // https://en.wikipedia.org/wiki/Lee–Jackson–King_Day
     private func leeJacksonDay(in year: Int) -> Holiday? {
         guard state == .virginia else { return nil }
-        let mlkDate = Date.calculate(.third, .monday, of: .january, in: year)
+        let mlkDate = Month.january.get(.third, .monday, in: year)
         if year >= 2000 {
-            return Holiday(name: "Lee-Jackson Day", date: Date.date(of: .friday, before: mlkDate))
+            return Holiday(name: "Lee-Jackson Day", date: mlkDate.previous(.friday))
         }
         if year >= 1978 {
             return Holiday(name: "Lee-Jackson-King Day", date: mlkDate)
         }
         if year >= 1904 {
-            return Holiday(name: "Lee-Jackson Day", date: Date(year: year, month: .january, day: 19))
+            return Holiday(name: "Lee-Jackson Day", date: (year, .january, 19))
         }
         if year >= 1889 {
-            return Holiday(name: "Robert E. Lee's Birthday", date: Date(year: year, month: .january, day: 19))
+            return Holiday(name: "Robert E. Lee's Birthday", date: (year, .january, 19))
         }
         return nil
     }
@@ -279,7 +271,7 @@ final class UnitedStates: CountryBase<USState> {
             } else if state == .virginia && year >= 2000 {
                 name = "Martin Luther King, Jr. Day"
             }
-            return Holiday(name: name, date: Date.calculate(.third, .monday, of: .january, in: year))
+            return Holiday(name: name, date: Month.january.get(.third, .monday, in: year))
         }
         return nil
     }
@@ -290,11 +282,11 @@ final class UnitedStates: CountryBase<USState> {
         let name = "Susan B. Anthony Day"
         if (state == .california && year >= 2014) || (state == .florida && year >= 2011) || (state == .newYork &&
             year >= 2014) || (state == .wisconsin && year >= 2014) {
-            let holiday = Holiday(name: name, date: Date(year: year, month: .february, day: 15))
-            return state == .florida ? observedHoliday(of: holiday) : holiday
+            let holiday = Holiday(name: name, date: (year, .february, 15))
+            return state == .florida ? HolidaysBuilderUS.observedHoliday(of: holiday) : holiday
         }
         if state == .massachusetts {
-            return Holiday(name: name, date: Date(year: year, month: .august, day: 26))
+            return Holiday(name: name, date: (year, .august, 26))
         }
         return nil
     }
@@ -313,15 +305,15 @@ final class UnitedStates: CountryBase<USState> {
             name = "Washington's Birthday/President's Day"
         }
         if state == .georgia {
-            let day = Date(year: year, month: .december, day: 24).weekday == Weekday.wednesday.rawValue ? 26 : 24
-            return Holiday(name: name, date: Date(year: year, month: .december, day: day))
+            let day = LocalDate(year: year, month: .december, day: 24).weekday == Weekday.wednesday ? 26 : 24
+            return Holiday(name: name, date: (year, .december, day))
         }
         if !state.isIn([.delaware, .florida, .newMexico]) {
             if year >= 1971 {
-                return Holiday(name: name, date: Date.calculate(.third, .monday, of: .february, in: year))
+                return Holiday(name: name, date: Month.february.get(.third, .monday, in: year))
             }
             if year >= 1879 {
-                return Holiday(name: name, date: Date(year: year, month: .february, day: 22))
+                return Holiday(name: name, date: (year, .february, 22))
             }
         }
         return nil
@@ -332,11 +324,12 @@ final class UnitedStates: CountryBase<USState> {
         guard let state = state else { return nil }
         let name = "César Chávez Day"
         if state == .california && year >= 1995 {
-            return observedHoliday(of: Holiday(name: name, date: Date(year: year, month: .march, day: 31)))
+            let march31 = LocalDate(year: year, month: .march, day: 31)
+            return HolidaysBuilderUS.observedHoliday(of: Holiday(name: name, date: march31))
         }
         if (state == .texas && year >= 2000) || (state == .colorado && year >= 2003) || (year >= 2015 &&
             state.isIn([.arizona, .michigan, .newMexico, .nevada, .utah, .washington, .wisconsin])) {
-            return Holiday(name: name, date: Date(year: year, month: .march, day: 31))
+            return Holiday(name: name, date: (year, .march, 31))
         }
         return nil
     }
@@ -346,16 +339,16 @@ final class UnitedStates: CountryBase<USState> {
         guard let state = state, year >= 1866 else { return nil }
         let name = state.isIn([.georgia, .florida, .texas]) ? "Confederate Heroes' Day" : "Confederate Memorial Day"
         if state.isIn([.alabama, .georgia]) {
-            return Holiday(name: name, date: Date.calculate(.fourth, .monday, of: .april, in: year))
+            return Holiday(name: name, date: Month.april.get(.fourth, .monday, in: year))
         }
         if state == .mississippi {
-            return Holiday(name: name, date: Date.last(.monday, of: .april, in: year))
+            return Holiday(name: name, date: Month.april.last(.monday, in: year))
         }
         if state == .southCarolina || (state == .northCarolina && year < 2014) {
-            return Holiday(name: name, date: Date(year: year, month: .may, day: 10))
+            return Holiday(name: name, date: (year, .may, 10))
         }
         if state == .texas && year >= 1931 {
-            return Holiday(name: name, date: Date(year: year, month: .january, day: 19))
+            return Holiday(name: name, date: (year, .january, 19))
         }
         return nil
     }
@@ -363,10 +356,11 @@ final class UnitedStates: CountryBase<USState> {
     private func veteransDay(in year: Int) -> Holiday? {
         let name = year >= 1954 ? "Veterans Day" : "Armistice Day"
         if year >= 1971 && year <= 1977 {
-            return Holiday(name: name, date: Date.calculate(.fourth, .monday, of: .october, in: year))
+            return Holiday(name: name, date: Month.october.get(.fourth, .monday, in: year))
         }
         if year >= 1938 {
-            return observedHoliday(of: Holiday(name: name, date: Date(year: year, month: .november, day: 11)))
+            let november11 = LocalDate(year: year, month: .november, day: 11)
+            return HolidaysBuilderUS.observedHoliday(of: Holiday(name: name, date: november11))
         }
         return nil
     }
@@ -390,7 +384,7 @@ final class UnitedStates: CountryBase<USState> {
             } else if state == .georgia {
                 name = year >= 2016 ? "State Holiday" : "Robert E. Lee's Birthday"
             }
-            return Holiday(name: name, date: Date.calculate(.fourth, .thursday, of: .november, in: year).addingDays(1))
+            return Holiday(name: name, date: Month.november.get(.fourth, .thursday, in: year).addingDays(1))
         }
         return nil
     }

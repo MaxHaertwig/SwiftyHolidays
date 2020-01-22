@@ -1,93 +1,85 @@
 import Foundation
 
 // https://de.wikipedia.org/wiki/Gesetzliche_Feiertage_in_Deutschland
-final class Germany: CountryBase<GermanState> {
+final class Germany: CountryWithStateBase<GermanState> {
+    override class var iso2Code: String { "DE" }
+    override class var iso3Code: String { "DEU" }
 
-    override var iso2Code: String { "DE" }
-    override var iso3Code: String { "DEU" }
+    override var defaultTimeZone: TimeZone { TimeZone(abbreviation: "CET")! }
 
-    override func allHolidays(year: Int) -> [Holiday] {
+    override func allHolidays(in year: Int) -> [Holiday] {
         guard year >= 1989 else { return [] }
+        return buildHolidays(year: year) { builder in
+            builder.addHoliday("Neujahrstag", date: (.january, 1))
 
-        var holidays = [Holiday]()
+            if state?.isIn([.badenWurttemberg, .bavaria, .saxonyAnhalt]) == true {
+                builder.addHoliday("Heilige Drei Könige", date: (.january, 6))
+            }
 
-        func addHoliday(_ name: String, month: Month, day: Int) {
-            holidays.append(Holiday(name: name, date: Date(year: year, month: month, day: day)))
+            if year >= 2019 && state == .berlin {
+                builder.addHoliday("Internationaler Frauentag", date: (.march, 8))
+            }
+
+            let easter = LocalDate.easter(in: year)
+
+            builder.addHoliday("Karfreitag", date: easter.addingDays(-2))
+
+            if state == .brandenburg {
+                builder.addHoliday("Ostersonntag", date: easter)
+            }
+
+            builder.addHoliday("Ostermontag", date: easter.addingDays(1))
+
+            builder.addHoliday("Tag der Arbeit", date: (.may, 1))
+
+            if year == 2020 && state == .berlin {
+                builder.addHoliday("75. Jahrestag der Befreiung vom Nationalsozialismus und der Beendigung des " +
+                    "Zweiten Weltkriegs in Europa", date: (.may, 8))
+            }
+
+            builder.addHoliday("Christi Himmelfahrt", date: easter.addingDays(39))
+
+            if state == .brandenburg {
+                builder.addHoliday("Pfingstsonntag", date: easter.addingDays(49))
+            }
+
+            builder.addHoliday("Pfingstmontag", date: easter.addingDays(50))
+
+            if state?.isIn([.badenWurttemberg, .bavaria, .hesse, .northRhineWestphalia, .rhinelandPalatinate,
+                .saarland]) == true {
+                builder.addHoliday("Fronleichnam", date: easter.addingDays(60))
+            }
+
+            if state == .saarland {
+                builder.addHoliday("Mariä Himmelfahrt", date: (.august, 15))
+            }
+
+            if year >= 2019 && state == .thuringia {
+                builder.addHoliday("Weltkindertag", date: (.september, 20))
+            }
+
+            builder.addHoliday("Tag der Deutschen Einheit", date: (.october, 3))
+
+            if year == 2017 {
+                builder.addHoliday("Reformationstag", date: (.october, 31))
+            } else if let state = state, state.isIn([.brandenburg, .mecklenburgVorpommern, .saxony, .saxonyAnhalt,
+                .thuringia]) || (year >= 2018 && state.isIn([.bremen, .hamburg, .lowerSaxony, .schleswigHolstein])) {
+                builder.addHoliday("Reformationstag", date: (.october, 31))
+            }
+
+            if state?.isIn([.badenWurttemberg, .bavaria, .northRhineWestphalia, .rhinelandPalatinate, .saarland])
+                == true {
+                builder.addHoliday("Allerheiligen", date: (.november, 1))
+            }
+
+            if state == .saxony {
+                let november23 = LocalDate(year: year, month: .november, day: 23)
+                builder.addHoliday("Buß- und Bettag", date: november23.previous(.wednesday))
+            }
+
+            builder.addHoliday("Erster Weihnachtsfeiertag", date: (.december, 25))
+            builder.addHoliday("Zweiter Weihnachtsfeiertag", date: (.december, 26))
         }
-        func addHoliday(_ name: String, date: Date) {
-            holidays.append(Holiday(name: name, date: date))
-        }
-
-        addHoliday("Neujahrstag", month: .january, day: 1)
-
-        if state?.isIn([.badenWurttemberg, .bavaria, .saxonyAnhalt]) == true {
-            addHoliday("Heilige Drei Könige", month: .january, day: 6)
-        }
-
-        if year >= 2019 && state == .berlin {
-            addHoliday("Internationaler Frauentag", month: .march, day: 8)
-        }
-
-        let easter = Date.easter(year: year)
-
-        addHoliday("Karfreitag", date: easter.addingDays(-2))
-
-        if state == .brandenburg {
-            addHoliday("Ostersonntag", date: easter)
-        }
-
-        addHoliday("Ostermontag", date: easter.addingDays(1))
-
-        addHoliday("Tag der Arbeit", month: .may, day: 1)
-
-        if year == 2020 && state == .berlin {
-            addHoliday("75. Jahrestag der Befreiung vom Nationalsozialismus und der Beendigung des Zweiten " +
-                "Weltkriegs in Europa", month: .may, day: 8)
-        }
-
-        addHoliday("Christi Himmelfahrt", date: easter.addingDays(39))
-
-        if state == .brandenburg {
-            addHoliday("Pfingstsonntag", date: easter.addingDays(49))
-        }
-
-        addHoliday("Pfingstmontag", date: easter.addingDays(50))
-
-        if state?.isIn([.badenWurttemberg, .bavaria, .hesse, .northRhineWestphalia, .rhinelandPalatinate, .saarland])
-            == true {
-            addHoliday("Fronleichnam", date: easter.addingDays(60))
-        }
-
-        if state == .saarland {
-            addHoliday("Mariä Himmelfahrt", month: .august, day: 15)
-        }
-
-        if year >= 2019 && state == .thuringia {
-            addHoliday("Weltkindertag", month: .september, day: 20)
-        }
-
-        addHoliday("Tag der Deutschen Einheit", month: .october, day: 3)
-
-        if year == 2017 {
-            addHoliday("Reformationstag", month: .october, day: 31)
-        } else if let state = state, state.isIn([.brandenburg, .mecklenburgVorpommern, .saxony, .saxonyAnhalt,
-            .thuringia]) || (year >= 2018 && state.isIn([.bremen, .hamburg, .lowerSaxony, .schleswigHolstein])) {
-            addHoliday("Reformationstag", month: .october, day: 31)
-        }
-
-        if state?.isIn([.badenWurttemberg, .bavaria, .northRhineWestphalia, .rhinelandPalatinate, .saarland]) == true {
-            addHoliday("Allerheiligen", month: .november, day: 1)
-        }
-
-        if state == .saxony {
-            let november23 = Date(year: year, month: .november, day: 23)
-            addHoliday("Buß- und Bettag", date: Date.date(of: .wednesday, before: november23))
-        }
-
-        addHoliday("Erster Weihnachtsfeiertag", month: .december, day: 25)
-        addHoliday("Zweiter Weihnachtsfeiertag", month: .december, day: 26)
-
-        return holidays
     }
 }
 

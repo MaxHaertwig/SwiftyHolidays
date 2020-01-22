@@ -1,70 +1,61 @@
 import Foundation
 
 // https://en.wikipedia.org/wiki/Public_holidays_in_France
-final class France: CountryBase<FrenchDepartment> {
+final class France: CountryWithStateBase<FrenchDepartment> {
+    override class var iso2Code: String { "FR" }
+    override class var iso3Code: String { "FRA" }
 
-    override var iso2Code: String { "FR" }
-    override var iso3Code: String { "FRA" }
+    override var defaultTimeZone: TimeZone { TimeZone(abbreviation: "CET")! }
 
-    override func allHolidays(year: Int) -> [Holiday] {
+    override func allHolidays(in year: Int) -> [Holiday] {
         guard year >= 1802 else { return [] }
+        return buildHolidays(year: year) { builder in
+            if year >= 1810 {
+                builder.addHoliday("Jour de l'an", date: (.january, 1))
+            }
 
-        var holidays = [Holiday]()
+            let easter = LocalDate.easter(in: year)
 
-        func addHoliday(_ name: String, month: Month, day: Int) {
-            holidays.append(Holiday(name: name, date: Date(year: year, month: month, day: day)))
+            if state?.isIn([.basRhin, .hautRhin, .moselle]) == true {
+                builder.addHoliday("Vendredi Saint", date: easter.addingDays(-2))
+            }
+
+            if year >= 1886 {
+                builder.addHoliday("Lundi de Pâques", date: easter.addingDays(1))
+            }
+
+            if year >= 1919 {
+                builder.addHoliday("Fête du Travail", date: (.may, 1))
+            }
+
+            if year >= 1981 {
+                builder.addHoliday("Fête de la Victoire", date: (.may, 8))
+            }
+
+            builder.addHoliday("Ascension", date: easter.addingDays(39))
+
+            if year >= 1886 {
+                builder.addHoliday("Lundi de Pentecôte", date: easter.addingDays(50))
+            }
+
+            if year >= 1880 {
+                builder.addHoliday("Fête Nationale", date: (.july, 14))
+            }
+
+            builder.addHoliday("Assomption", date: (.august, 15))
+
+            builder.addHoliday("Toussaint", date: (.november, 1))
+
+            if year >= 1918 {
+                builder.addHoliday("Armistice de 1918", date: (.november, 11))
+            }
+
+            builder.addHoliday("Noël", date: (.december, 25))
+
+            if state?.isIn([.basRhin, .hautRhin, .moselle]) == true {
+                builder.addHoliday("Deuxième jour de Noël", date: (.december, 26))
+            }
         }
-        func addHoliday(_ name: String, date: Date) {
-            holidays.append(Holiday(name: name, date: date))
-        }
-
-        if year >= 1810 {
-            addHoliday("Jour de l'an", month: .january, day: 1)
-        }
-
-        let easter = Date.easter(year: year)
-
-        if state?.isIn([.basRhin, .hautRhin, .moselle]) == true {
-            addHoliday("Vendredi Saint", date: easter.addingDays(-2))
-        }
-
-        if year >= 1886 {
-            addHoliday("Lundi de Pâques", date: easter.addingDays(1))
-        }
-
-        if year >= 1919 {
-            addHoliday("Fête du Travail", month: .may, day: 1)
-        }
-
-        if year >= 1981 {
-            addHoliday("Fête de la Victoire", month: .may, day: 8)
-        }
-
-        addHoliday("Ascension", date: easter.addingDays(39))
-
-        if year >= 1886 {
-            addHoliday("Lundi de Pentecôte", date: easter.addingDays(50))
-        }
-
-        if year >= 1880 {
-            addHoliday("Fête Nationale", month: .july, day: 14)
-        }
-
-        addHoliday("Assomption", month: .august, day: 15)
-
-        addHoliday("Toussaint", month: .november, day: 1)
-
-        if year >= 1918 {
-            addHoliday("Armistice de 1918", month: .november, day: 11)
-        }
-
-        addHoliday("Noël", month: .december, day: 25)
-
-        if state?.isIn([.basRhin, .hautRhin, .moselle]) == true {
-            addHoliday("Deuxième jour de Noël", month: .december, day: 26)
-        }
-
-        return holidays
     }
 }
 
