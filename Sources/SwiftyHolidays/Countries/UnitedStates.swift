@@ -16,7 +16,7 @@ final class UnitedStates: CountryWithStateBase<USState> {
                 return TimeZone(abbreviation: "PST")!
             }
             if state.isIn([.arizona, .colorado, .idaho, .montana, .newMexico, .utah, .wyoming]) {
-                return TimeZone(abbreviation: "PST")!
+                return TimeZone(abbreviation: "MST")!
             }
             if state.isIn([.arkansas, .alabama, .illinois, .iowa, .kansas, .louisiana, .minnesota, .missouri,
                 .mississippi, .nebraska, .northDakota, .oklahoma, .southDakota, .tennessee, .texas, .wisconsin]) {
@@ -69,6 +69,8 @@ final class UnitedStates: CountryWithStateBase<USState> {
                 builder.addHoliday("Seward's Day", date: (.march, 30))
             }
         }
+
+        builder.addHoliday(tuple: cesarChavezDay(in: year))
 
         if state?.isIn([.maine, .massachusetts]) == true {
             if year >= 1969 {

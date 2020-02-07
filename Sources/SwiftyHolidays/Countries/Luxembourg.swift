@@ -8,6 +8,7 @@ final class Luxembourg: CountryBase {
     override var defaultTimeZone: TimeZone { TimeZone(abbreviation: "CET")! }
 
     override func allHolidays(in year: Int) -> [Holiday] {
+        guard year != 0 else { return [] }
         let easter = LocalDate.easter(in: year)
         return [
             Holiday(name: "Neijoerschdag", date: (year, .january, 1)),
