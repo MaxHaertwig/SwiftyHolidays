@@ -42,7 +42,7 @@ final class UnitedStates: CountryWithStateBase<USState> {
             builder.addHoliday("Lincoln's Birthday", date: (.february, 12), checkObservance: true)
         }
 
-        builder.addHoliday(susanBAnothonyDay(in: year))
+        builder.addHoliday(tuple: susanBAnothonyDay(in: year))
 
         builder.addHoliday(washingtonsBirthday(in: year))
 
@@ -187,7 +187,7 @@ final class UnitedStates: CountryWithStateBase<USState> {
             builder.addHoliday("Election Day", date: Month.november.firstDay(in: year).next(.tuesday))
         }
 
-        builder.addHoliday(veteransDay(in: year))
+        builder.addHoliday(tuple: veteransDay(in: year))
 
         if year >= 1871 {
             builder.addHoliday("Thanksgiving Day", date: Month.november.get(.fourth, .thursday, in: year))
@@ -196,7 +196,7 @@ final class UnitedStates: CountryWithStateBase<USState> {
         if let state = state, (state.isIn([.kansas, .michigan, .northCarolina]) && year >= 2013) || (state == .texas &&
             year >= 1981) || (state == .wisconsin && year >= 2012) {
             let name = "Christmas Eve"
-            let date = LocalDate(year: year, month: .december, day: 24)
+            let date = LocalDate(year: year, month: .december, day: 24)!
             builder.addHoliday(name, date: date)
             if date.weekday == Weekday.friday || date.weekday == Weekday.saturday {
                 builder.addHoliday(name + " (observed)", date: date.addingDays(-1))
@@ -211,7 +211,7 @@ final class UnitedStates: CountryWithStateBase<USState> {
 
         if state == .northCarolina && year >= 2013 {
             let name = "Day After Christmas"
-            let date = LocalDate(year: year, month: .december, day: 26)
+            let date = LocalDate(year: year, month: .december, day: 26)!
             if date.weekday == Weekday.saturday {
                 builder.addHoliday(name, date: date.addingDays(2))
             } else if date.weekday == Weekday.sunday || date.weekday == Weekday.monday {
@@ -222,11 +222,11 @@ final class UnitedStates: CountryWithStateBase<USState> {
         }
 
         if (state?.isIn([.kentucky, .michigan]) == true && year >= 2013) || (state == .wisconsin && year >= 2012) {
-            let date = LocalDate(year: year, month: .december, day: 31)
+            let date = LocalDate(year: year, month: .december, day: 31)!
             builder.addHoliday("New Year's Eve", date: date.weekday == Weekday.saturday ? date.addingDays(-1) : date)
         }
 
-        if LocalDate(year: year, month: .december, day: 31).weekday == Weekday.friday {
+        if LocalDate(year: year, month: .december, day: 31)!.weekday == Weekday.friday {
             builder.addHoliday("New Year's Day (observed)", date: (.december, 31))
         }
 
@@ -277,16 +277,16 @@ final class UnitedStates: CountryWithStateBase<USState> {
     }
 
     // https://en.wikipedia.org/wiki/Susan_B._Anthony_Day#cite_note-15
-    private func susanBAnothonyDay(in year: Int) -> Holiday? {
+    private func susanBAnothonyDay(in year: Int) -> (Holiday, Bool)? {
         guard let state = state else { return nil }
         let name = "Susan B. Anthony Day"
         if (state == .california && year >= 2014) || (state == .florida && year >= 2011) || (state == .newYork &&
             year >= 2014) || (state == .wisconsin && year >= 2014) {
             let holiday = Holiday(name: name, date: (year, .february, 15))
-            return state == .florida ? HolidaysBuilderUS.observedHoliday(of: holiday) : holiday
+            return (holiday, state == .florida)
         }
         if state == .massachusetts {
-            return Holiday(name: name, date: (year, .august, 26))
+            return (Holiday(name: name, date: (year, .august, 26)), false)
         }
         return nil
     }
@@ -305,7 +305,7 @@ final class UnitedStates: CountryWithStateBase<USState> {
             name = "Washington's Birthday/President's Day"
         }
         if state == .georgia {
-            let day = LocalDate(year: year, month: .december, day: 24).weekday == Weekday.wednesday ? 26 : 24
+            let day = LocalDate(year: year, month: .december, day: 24)!.weekday == Weekday.wednesday ? 26 : 24
             return Holiday(name: name, date: (year, .december, day))
         }
         if !state.isIn([.delaware, .florida, .newMexico]) {
@@ -320,16 +320,15 @@ final class UnitedStates: CountryWithStateBase<USState> {
     }
 
     // https://en.wikipedia.org/wiki/Cesar_Chavez_Day
-    private func cesarChavezDay(in year: Int) -> Holiday? {
+    private func cesarChavezDay(in year: Int) -> (Holiday, Bool)? {
         guard let state = state else { return nil }
         let name = "César Chávez Day"
         if state == .california && year >= 1995 {
-            let march31 = LocalDate(year: year, month: .march, day: 31)
-            return HolidaysBuilderUS.observedHoliday(of: Holiday(name: name, date: march31))
+            return (Holiday(name: name, date: (year, .march, 31)), true)
         }
         if (state == .texas && year >= 2000) || (state == .colorado && year >= 2003) || (year >= 2015 &&
             state.isIn([.arizona, .michigan, .newMexico, .nevada, .utah, .washington, .wisconsin])) {
-            return Holiday(name: name, date: (year, .march, 31))
+            return (Holiday(name: name, date: (year, .march, 31)), false)
         }
         return nil
     }
@@ -353,14 +352,13 @@ final class UnitedStates: CountryWithStateBase<USState> {
         return nil
     }
 
-    private func veteransDay(in year: Int) -> Holiday? {
+    private func veteransDay(in year: Int) -> (Holiday, Bool)? {
         let name = year >= 1954 ? "Veterans Day" : "Armistice Day"
         if year >= 1971 && year <= 1977 {
-            return Holiday(name: name, date: Month.october.get(.fourth, .monday, in: year))
+            return (Holiday(name: name, date: Month.october.get(.fourth, .monday, in: year)), false)
         }
         if year >= 1938 {
-            let november11 = LocalDate(year: year, month: .november, day: 11)
-            return HolidaysBuilderUS.observedHoliday(of: Holiday(name: name, date: november11))
+            return (Holiday(name: name, date: (year, .november, 11)), true)
         }
         return nil
     }

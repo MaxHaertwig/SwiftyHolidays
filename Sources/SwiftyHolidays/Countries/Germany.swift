@@ -73,7 +73,7 @@ final class Germany: CountryWithStateBase<GermanState> {
             }
 
             if state == .saxony {
-                let november23 = LocalDate(year: year, month: .november, day: 23)
+                let november23 = LocalDate(year: year, month: .november, day: 23)!
                 builder.addHoliday("Buß- und Bettag", date: november23.previous(.wednesday))
             }
 

@@ -6,19 +6,22 @@ public struct LocalDate: Equatable {
 
     // MARK: Init
 
-    init(year: Int, month: Int, day: Int) {
+    public init?(year: Int, month: Int, day: Int) {
+        guard let monthObj = Month(rawValue: month), year != 0 && 1...monthObj.length(in: year) ~= day
+            else { return nil }
         self.year = year
         self.month = month
         self.day = day
     }
 
-    init(year: Int, month: Month, day: Int) {
+    public init?(year: Int, month: Month, day: Int) {
+        guard year != 0 && 1...month.length(in: year) ~= day else { return nil }
         self.year = year
         self.month = month.rawValue
         self.day = day
     }
     
-    init(date: Date, timeZone: TimeZone) {
+    public init(date: Date, timeZone: TimeZone) {
         let dateComponents = Calendar(timeZone: timeZone).dateComponents([.year, .month, .day], from: date)
         self.year = dateComponents.year!
         self.month = dateComponents.month!
@@ -85,7 +88,7 @@ public struct LocalDate: Equatable {
             }
             newDay += Month(rawValue: newMonth)!.length(in: year)
         }
-        return LocalDate(year: newYear, month: newMonth, day: newDay)
+        return LocalDate(year: newYear, month: newMonth, day: newDay)!
     }
 
     func previous(_ weekday: Weekday) -> LocalDate {
@@ -121,7 +124,7 @@ public struct LocalDate: Equatable {
 
         let month = Int(floor(Double(h + L - 7*m + 114) / 31))
         let day = ((h + L - 7*m + 114) % 31) + 1
-        return LocalDate(year: year, month: month, day: day)
+        return LocalDate(year: year, month: month, day: day)!
     }
     // swiftlint:enable identifier_name
 }

@@ -1,6 +1,6 @@
 import Foundation
 
-enum Month: Int, CaseIterable {
+public enum Month: Int, CaseIterable {
     case january = 1
     case february = 2
     case march = 3
@@ -26,11 +26,11 @@ enum Month: Int, CaseIterable {
     }
 
     func firstDay(in year: Int) -> LocalDate {
-        return LocalDate(year: year, month: self, day: 1)
+        return LocalDate(year: year, month: self, day: 1)!
     }
 
     func lastDay(in year: Int) -> LocalDate {
-        return LocalDate(year: year, month: self, day: length(in: year))
+        return LocalDate(year: year, month: self, day: length(in: year))!
     }
 
     enum WeekdayInMonthOrdinal: Int {

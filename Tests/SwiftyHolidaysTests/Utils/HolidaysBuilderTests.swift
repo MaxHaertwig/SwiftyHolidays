@@ -9,7 +9,7 @@ final class HolidaysBuilderTests: XCTestCase {
 
     func testAddHoliday() {
         let builder = HolidaysBuilder(year: 2020)
-        builder.addHoliday("A", date: LocalDate(year: 2020, month: .march, day: 16))
+        builder.addHoliday("A", date: LocalDate(year: 2020, month: .march, day: 16)!)
         builder.addHoliday("B", date: (.july, 30))
         XCTAssertEqual(builder.getHolidays().count, 2)
         XCTAssertEqual(builder.getHolidays()[0], Holiday(name: "A", date: (2020, .march, 16)))
