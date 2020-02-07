@@ -1,5 +1,6 @@
 import Foundation
 
+/// Represents a country and can be used to retrieve its holidays.
 public enum Country: String, CaseIterable, CountryProtocol {
     case austria
     case denmark
@@ -68,6 +69,7 @@ public enum Country: String, CaseIterable, CountryProtocol {
     ]
 }
 
+/// Represents a specific state of a country and can be used to retrieve its holidays.
 public enum CountryWithState: CaseIterable, CountryProtocol {
     case austria(state: AustrianState?)
     case france(department: FrenchDepartment?)

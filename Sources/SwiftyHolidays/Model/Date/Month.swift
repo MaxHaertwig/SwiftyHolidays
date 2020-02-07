@@ -1,5 +1,6 @@
 import Foundation
 
+/// SwiftyHolidays: Represents a month in the Gregorian calendar.
 public enum Month: Int, CaseIterable {
     case january = 1
     case february = 2

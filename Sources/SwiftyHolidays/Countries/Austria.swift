@@ -28,6 +28,7 @@ final class Austria: CountryWithStateBase<AustrianState> {
     }
 }
 
+/// SwiftyHolidays: Represents a state of Austria.
 public enum AustrianState: CaseIterable {
     case burgenland
     case karnten

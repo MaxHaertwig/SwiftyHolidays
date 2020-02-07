@@ -83,6 +83,7 @@ final class Germany: CountryWithStateBase<GermanState> {
     }
 }
 
+/// SwiftyHolidays: Represents a state of Germany.
 public enum GermanState: CaseIterable {
     case badenWurttemberg
     case bavaria

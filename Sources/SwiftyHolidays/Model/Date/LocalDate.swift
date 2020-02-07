@@ -6,6 +6,7 @@ public struct LocalDate: Equatable {
 
     // MARK: Init
 
+    /// SwiftyHolidays: Initializes an instance of `LocalDate`. Returns nil if the resulting date is invalid.
     public init?(year: Int, month: Int, day: Int) {
         guard let monthObj = Month(rawValue: month), year != 0 && 1...monthObj.length(in: year) ~= day
             else { return nil }
@@ -14,13 +15,19 @@ public struct LocalDate: Equatable {
         self.day = day
     }
 
+    /// SwiftyHolidays: Initializes an instance of `LocalDate`. Returns nil if the resulting date is invalid.
     public init?(year: Int, month: Month, day: Int) {
         guard year != 0 && 1...month.length(in: year) ~= day else { return nil }
         self.year = year
         self.month = month.rawValue
         self.day = day
     }
-    
+
+    /// SwiftyHolidays: Initializes an instance of `LocalDate`.
+    ///
+    /// - Parameters:
+    ///   - date: A date with time information.
+    ///   - timeZone: A time zone to interpret the date.
     public init(date: Date, timeZone: TimeZone) {
         let dateComponents = Calendar(timeZone: timeZone).dateComponents([.year, .month, .day], from: date)
         self.year = dateComponents.year!
@@ -50,6 +57,10 @@ public struct LocalDate: Equatable {
         return countryWithState.allHolidays(in: year).first { $0.date == self }
     }
 
+    /// SwiftyHolidays: Converts the `LocalDate` to a `Date`.
+    ///
+    /// - Parameters:
+    ///   - timeZone: Time zone to interpret the date.
     public func asDate(in timeZone: TimeZone) -> Date {
         var dateComponents = DateComponents()
         dateComponents.year = year

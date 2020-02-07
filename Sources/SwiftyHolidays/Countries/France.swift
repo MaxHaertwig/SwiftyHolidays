@@ -59,6 +59,7 @@ final class France: CountryWithStateBase<FrenchDepartment> {
     }
 }
 
+/// SwiftyHolidays: Represents a department of France.
 public enum FrenchDepartment: CaseIterable {
     case ain
     case aisne

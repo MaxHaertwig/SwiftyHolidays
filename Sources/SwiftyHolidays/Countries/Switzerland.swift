@@ -109,6 +109,7 @@ final class Switzerland: CountryWithStateBase<SwissCanton> {
     }
 }
 
+/// SwiftyHolidays: Represents a canton of Switzerland.
 public enum SwissCanton: CaseIterable {
     // Order in Swiss constitution
     case zurich

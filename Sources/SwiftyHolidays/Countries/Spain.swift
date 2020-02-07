@@ -130,6 +130,7 @@ final class Spain: CountryWithStateBase<SpanishCommunity> {
     }
 }
 
+/// SwiftyHolidays: Represents a community of Spain.
 public enum SpanishCommunity: CaseIterable {
     case andalusia
     case aragon

@@ -24,6 +24,4 @@ final class Luxembourg: CountryBase {
             Holiday(name: "Stiefesdag", date: (year, .december, 26))
         ].compactMap { $0 }
     }
-
-
 }

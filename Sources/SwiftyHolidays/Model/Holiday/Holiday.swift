@@ -1,7 +1,11 @@
 import Foundation
 
+/// SwiftyHolidays: Refresents a specific holiday on a single day.
 public struct Holiday: Equatable {
+    /// SwiftyHolidays: The name of the holiday.
     public let name: String
+
+    /// SwiftyHolidays: The date of the holiday without information about the time of day.
     public let date: LocalDate
 
     init(name: String, date: LocalDate) {

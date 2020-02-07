@@ -390,6 +390,7 @@ final class UnitedStates: CountryWithStateBase<USState> {
     }
 }
 
+/// SwiftyHolidays: Represents a state of the United States of America.
 public enum USState: CaseIterable {
     case alabama
     case alaska
