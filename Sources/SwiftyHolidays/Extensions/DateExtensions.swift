@@ -1,6 +1,14 @@
 import Foundation
 
 public extension Date {
+    /// SwiftyHolidays: Returns an instance of `LocalDate` with the same date, but without information about time.
+    ///
+    /// - Parameters:
+    ///   - timeZone: Time zone to interpret the date.
+    func asLocalDate(in timeZone: TimeZone) -> LocalDate {
+        return LocalDate(date: self, timeZone: timeZone)
+    }
+
     /// SwiftyHolidays: Returns true if there's a holiday at that date in a given country and time zone.
     ///
     /// - Parameters:
