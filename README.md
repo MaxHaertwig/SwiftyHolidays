@@ -26,7 +26,7 @@ let package = Package(
 
 **LocalDate**
 
-The class `LocalDate` is used to abstract away the concept of time and time zones. You can convert `Date` to `LocalDate` and the other way around.
+The class `LocalDate` is used to abstract away the concept of time and time zones.  `LocalDate` can be converted to `Date` and the other way around.
 
 ```swift
 import SwiftyHolidays
@@ -55,7 +55,7 @@ nil
 2020-03-31 07:00:00 +0000
 ```
 
-You can also use Swift's `Date` class. The related methods require a `TimeZone` to interpret the date. If you don't specify one, the default time zone for the given country (or state) will be used.
+Swift's `Date` class can also be used. The related methods require a `TimeZone` to interpret the date. If left unspecified, the default time zone for the given country (or state) will be used.
 
 ```swift
 import SwiftyHolidays
@@ -72,7 +72,7 @@ SwiftyHolidays.LocalDate(year: 2019, month: 7, day: 4)
 SwiftyHolidays.LocalDate(year: 2019, month: 7, day: 3)
 ```
 
-Initialize an instance of `Country` or `CountryWithState` to generate a list of its holidays.
+An instance of `Country` or `CountryWithState` can be initialized to generate a list of its holidays.
 
 ```swift
 import SwiftyHolidays
@@ -97,7 +97,7 @@ You can also call `Country.availableCountries` to get a list of supported countr
 
 ## Contributions
 
-[Issues](https://github.com/MaxHaertwig/SwiftyHolidays/issues) and [Pull Requests](https://github.com/MaxHaertwig/SwiftyHolidays/pulls) are always welcome.
+Feedback, [Issues](https://github.com/MaxHaertwig/SwiftyHolidays/issues), and [Pull Requests](https://github.com/MaxHaertwig/SwiftyHolidays/pulls) are always welcome.
 
 ## License
 
