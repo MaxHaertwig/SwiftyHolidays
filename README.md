@@ -2,6 +2,10 @@
 
 A swifty library for checking whether a given Date is a holiday in a specific country or state. It can also generate a list of holidays in a given year.
 
+## Example Project
+
+Feel free to take a look at [SwiftyHolidays Example](https://github.com/MaxHaertwig/SwiftyHolidays-Example) to get a better feeling of how to use this library.
+
 ## Installation
 
 **Xcode Project**
