@@ -28,6 +28,28 @@ public enum Country: String, CaseIterable, CountryProtocol {
         }
         return nil
     }
+    
+    /// SwiftyHolidays: The 2 digit ISO 3166 country code.
+    public var iso2Code: String {
+        return type(of: model).iso2Code
+    }
+    
+    /// SwiftyHolidays: The 3 digit ISO 3166 country code.
+    public var iso3Code: String {
+        return type(of: model).iso3Code
+    }
+    
+    /// SwiftyHolidays: The country's default time zone.
+    public var defaultTimeZone: TimeZone {
+        return model.defaultTimeZone
+    }
+    
+    /// SwiftyHolidays: Returns a localized display string for the country.
+    ///
+    /// - Parameter locale: The locale to use for localizing the country's name.
+    public func displayString(locale: Locale = .current) -> String {
+        return locale.localizedString(forRegionCode: iso2Code) ?? ""
+    }
 
     /// SwiftyHolidays: Returns all holidays of the country in a given year.
     public func allHolidays(in year: Int) -> [Holiday] {
