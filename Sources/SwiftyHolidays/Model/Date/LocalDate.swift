@@ -72,8 +72,9 @@ public struct LocalDate: Equatable {
     // MARK: Internal
 
     var weekday: Weekday {
-        let date = asDate(in: TimeZone(secondsFromGMT: 0)!)
-        let dateWeekday = Calendar(identifier: .gregorian).component(.weekday, from: date)
+        let gmt = TimeZone(secondsFromGMT: 0)!
+        let date = asDate(in: gmt)
+        let dateWeekday = Calendar(timeZone: gmt).component(.weekday, from: date)
         return Weekday(rawValue: dateWeekday)!
     }
 
