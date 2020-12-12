@@ -1,12 +1,12 @@
-# SwiftyHolidays
+# 📅 SwiftyHolidays
 
 A swifty library for checking whether a given Date is a holiday in a specific country or state. It can also generate a list of holidays in a given year.
 
-## Example Project
+## 📱 Example Project
 
 Feel free to take a look at [SwiftyHolidays Example](https://github.com/MaxHaertwig/SwiftyHolidays-Example) to get a better feeling of how to use this library.
 
-## Installation
+## ⚙️ Installation
 
 **Xcode Project**
 
@@ -26,7 +26,7 @@ let package = Package(
 )
 ```
 
-## Usage
+## 📝 Usage
 
 **LocalDate**
 
@@ -86,23 +86,23 @@ import SwiftyHolidays
 >>> CountryWithState.germany(state: .berlin).allHolidays(in: 2020)
 ```
 
-## Supported Countries
+## 🌍 Supported Countries
 
-- Austria
-- Denmark
-- France
-- Germany
-- Luxembourg
-- Spain
-- Switzerland
-- United States
+- Austria 🇦🇹
+- Denmark 🇩🇰
+- France 🇫🇷
+- Germany 🇩🇪
+- Luxembourg 🇱🇺
+- Spain 🇪🇸
+- Switzerland 🇨🇭
+- United States 🇺🇸
 
 You can also call `Country.availableCountries` to get a list of supported countries.
 
-## Contributions
+## 🤝 Contributions
 
 Feedback, [Issues](https://github.com/MaxHaertwig/SwiftyHolidays/issues), and [Pull Requests](https://github.com/MaxHaertwig/SwiftyHolidays/pulls) are always welcome.
 
-## License
+## 📄 License
 
 SwiftyHolidays is released under the MIT license. See [LICENSE](https://github.com/MaxHaertwig/SwiftyHolidays/blob/master/LICENSE) for more information.
