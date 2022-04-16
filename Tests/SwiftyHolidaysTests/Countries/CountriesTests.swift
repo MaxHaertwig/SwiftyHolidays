@@ -18,6 +18,7 @@ final class CountriesTests: XCTestCase {
         XCTAssertEqual(SpanishCommunity.allCases.count, 17 + 2) // autonomous cities: Ceuta, Melilla
         XCTAssertEqual(SwissCanton.allCases.count, 26)
         XCTAssertEqual(USState.allCases.count, 50)
+        XCTAssertEqual(ItalianRegion.allCases.count, 20)
     }
 
     static var allTests = [

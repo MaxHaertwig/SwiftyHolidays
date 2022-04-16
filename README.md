@@ -92,6 +92,7 @@ import SwiftyHolidays
 - Denmark 🇩🇰
 - France 🇫🇷
 - Germany 🇩🇪
+- Italy 🇮🇹
 - Luxembourg 🇱🇺
 - Spain 🇪🇸
 - Switzerland 🇨🇭
