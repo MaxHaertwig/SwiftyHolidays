@@ -18,9 +18,13 @@ final class Italy: CountryWithStateBase<ItalianRegion> {
     override func allHolidays(in year: Int) -> [Holiday] {
         return buildHolidays(year: year) { builder in
             
-        
-            builder.addHoliday("Capodanno", date: (.january, 1))
-            builder.addHoliday("Epifania", date: (.january, 6))
+            if year < 1968 {
+                builder.addHoliday("Capodanno", date: (.january, 1))
+            }
+            
+            if !(1978...1985).contains(year) {
+                builder.addHoliday("Epifania", date: (.january, 6))
+            }
             
             let easter = LocalDate.easter(in: year)
             builder.addHoliday("Pasqua", date: easter)
@@ -41,6 +45,15 @@ final class Italy: CountryWithStateBase<ItalianRegion> {
             builder.addHoliday("Natale", date: (.december, 25))
             
             builder.addHoliday("Santo Stefano", date: (.december, 26))
+            
+            if year <= 1977 {
+                builder.addHoliday("San Giuseppe", date: (.march, 19))
+                builder.addHoliday("Ascensione", date: easter.addingDays(40))
+                builder.addHoliday("Corpus Domini", date: easter.addingDays(60))
+                builder.addHoliday("San Pietro e Paolo, patroni di Roma", date: (.june, 29))
+                builder.addHoliday("San Francesco D'Assisi, patrono d'Italia", date: (.october, 4))
+                builder.addHoliday("Giornata dell'unità nazionale e delle Forze Armate", date: (.november, 4))
+            }
         }
     }
 }
