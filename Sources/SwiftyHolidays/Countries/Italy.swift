@@ -1,10 +1,3 @@
-//
-//  File.swift
-//  
-//
-//  Created by Francesco Bianco on 16/04/22.
-//
-
 import Foundation
 
 // https://it.wikipedia.org/wiki/Festivit%C3%A0_in_Italia
@@ -58,27 +51,26 @@ final class Italy: CountryWithStateBase<ItalianRegion> {
     }
 }
 
-
 /// SwiftyHolidays: Represents a region of Italy.
 public enum ItalianRegion: CaseIterable {
-    case lombardia
-    case lazio
-    case veneto
+    case abruzzo
+    case basilicata
+    case calabria
     case campania
-    case sicilia
     case emilia_romagna
+    case griuli_venezia_giulia
+    case lazio
+    case liguria
+    case lombardia
+    case marche
+    case molise
     case piemonte
     case puglia
-    case toscana
-    case calabria
     case sardegna
-    case liguria
-    case marche
-    case abruzzo
-    case griuli_venezia_giulia
+    case sicilia
+    case toscana
     case trentino_alto_adige
     case umbria
-    case basilicata
-    case molise
     case valle_daosta
+    case veneto
 }

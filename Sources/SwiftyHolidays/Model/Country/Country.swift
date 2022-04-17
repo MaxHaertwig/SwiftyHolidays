@@ -85,7 +85,7 @@ public enum Country: String, CaseIterable, CountryProtocol {
     private static let mapping: [Country: CountryWithState] = [
         .austria: .austria(state: nil),
         .france: .france(department: nil),
-        .italy: .italy(state: nil),
+        .italy: .italy(region: nil),
         .germany: .germany(state: nil),
         .spain: .spain(community: nil),
         .switzerland: .switzerland(canton: nil),
@@ -98,7 +98,7 @@ public enum CountryWithState: CaseIterable, CountryProtocol {
     case austria(state: AustrianState?)
     case france(department: FrenchDepartment?)
     case germany(state: GermanState?)
-    case italy(state: ItalianRegion?)
+    case italy(region: ItalianRegion?)
     case spain(community: SpanishCommunity?)
     case switzerland(canton: SwissCanton?)
     case unitedStates(state: USState?)
@@ -115,7 +115,7 @@ public enum CountryWithState: CaseIterable, CountryProtocol {
             AustrianState.allCases.map { .austria(state: $0) },
             FrenchDepartment.allCases.map { .france(department: $0) },
             GermanState.allCases.map { .germany(state: $0) },
-            ItalianRegion.allCases.map { .italy(state: $0) },
+            ItalianRegion.allCases.map { .italy(region: $0) },
             SpanishCommunity.allCases.map { .spain(community: $0) },
             SwissCanton.allCases.map { .switzerland(canton: $0) },
             USState.allCases.map { .unitedStates(state: $0) }
@@ -132,8 +132,8 @@ public enum CountryWithState: CaseIterable, CountryProtocol {
             return France(state: department)
         case .germany(let state):
             return Germany(state: state)
-        case .italy(let state):
-            return Italy(state: state)
+        case .italy(let region):
+            return Italy(state: region)
         case .spain(let community):
             return Spain(state: community)
         case .switzerland(let canton):
